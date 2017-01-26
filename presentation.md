@@ -116,6 +116,30 @@ Ember.Route.extend({
 
 ---
 
+```hbs
+{{!-- app/templates/application.hbs --}}
+<section>
+  {{outlet}}
+</section>
+```
+
+
+```hbs
+{{!-- app/templates/index.hbs --}}
+<h1>Index</h1>
+```
+
+```html
+<!-- 出力: output -->
+<section>
+  <h1>Index</h1>
+</section>
+```
+
+* `{{outlet}}` と `{{outlet 'main'}}` は同じ
+
+---
+
 ## 例2 Routeを1つ定義してみる
 
 
