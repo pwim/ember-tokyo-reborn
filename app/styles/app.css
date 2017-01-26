@@ -1,0 +1,12 @@
+.outlet-error {
+  border: solid 10px red;
+  min-height:100px;
+  padding: 20px;
+}
+
+.outlet-healthy {
+  border: solid 10px blue;
+  min-height:100px;
+  padding: 20px;
+}
+
