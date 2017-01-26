@@ -1,0 +1,5 @@
+graph TD
+  Router[Router /]
+  Router-->ApplicationRoute[/ ApplicationRoute]
+  ApplicationRoute--> |render application.hbs| IndexRoute[/IndexRoute]
+  IndexRoute-->|render index.hbs in outlet in application.hbs| END
