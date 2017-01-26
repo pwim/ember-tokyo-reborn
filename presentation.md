@@ -78,13 +78,22 @@ Behind the scenes
 * `ember s`
 * `open http://localhost:4200/`
 
-![](./graphs/sample-01.mmd.png)
+[chart](https://github.com/dopin/ember-tokyo-reborn/graphs/sample-01.mmd.png)
+
+---
+
+<p align="center">
+<img src="./graphs/sample-01.mmd.png" width="80%">
+</p>
 
 ---
 
 ### behind the scenes
 
+こんなコードが裏で動いています(正確ではありません)
+
 ```js
+// app/routes/application.js
 Ember.Route.extend({
   renderTemplate() {
     this.render('application');
