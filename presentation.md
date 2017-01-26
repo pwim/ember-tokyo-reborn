@@ -190,7 +190,7 @@ Ember.Router.map(function() {
 リポジトリの一覧と詳細、編集ページの構成例
 
 | path | description |
-| - | - |
+| --- | --- |
 | /repositories | リポジトリ一覧  |
 | /repositories/new | リポジトリ新規作成  |
 | /repositories/:id | リポジトリ詳細 |
@@ -225,7 +225,7 @@ Ember.Router.map(function() {
 ### Rails
 
 | path | controller | template |
-| - | - | - |
+| --- | --- | --- |
 | /repositories | repositories#index | repositories/index.html.erb |
 | /repositories/new | repositories#new | repositories/new.html.erb |
 | /repositories/1 | repositories#show | repositories/edit.html.erb / repositories/repository/index.hbs  |
@@ -239,7 +239,7 @@ Ember.Router.map(function() {
 ### Ember
 
 | path | route | template |
-| - | - | - |
+| --- | --- | --- |
 | /repositories | Repositories(Index)Route | repositories.hbs / repositories/index.hbs |
 | /repositories/new | RepositoriesNewRoute | repositories/new.hbs |
 | /repositories/1 | RepositoriesRepository(Index)Route | repositories/repository.hbs / repositories/repository/index.hbs  |
@@ -254,7 +254,7 @@ Ember.Router.map(function() {
 ### Route Family
 
 | path | route | parent |
-| - | - | - |
+| --- | --- | --- |
 | /repositories | RepositoriesRoute | ApplicationRoute |
 | /repositories/new | RepositoriesNewRoute | RepositoriesRoute  |
 | /repositories/1 | RepositoriesRepositoryRoute | RepositoriesRoute |
