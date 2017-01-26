@@ -32,10 +32,37 @@ Behind the scenes
 
 * CoCがあるフレームワーク
 * CoCを求めているならEmberは候補に入れてもいいはず！
-* CoC = 知らないと逆に迷ったり分からなくなる
-* 今日はそれについて、初心者(今でも初心者だけど)の私がハマった経験から、Emberではこうやる、やっている(Ember Way)というのを説明していきます
-* RailsのMVCは忘れましょう(違うものです)
+* CoCは知らないと逆に迷ったり分からなくなる
+* 今日はその辺について、初心者の私がハマった経験から、Emberではこうやる・やっている(Ember Way)というのを説明していきます
+* RailsのMVCは忘れましょう(違うものです。時々違いを説明するけど)
 
+---
+
+## 最初に知っておくべきもの
+
+* Router
+* Route
+* Template
+* Controller
+* これらのCoC(と命名規則)と役割
+* Componentの使い方と活用方法
+  * これはTemplateとControllerを知っていれば割と簡単 
+
+---
+
+## その次は
+
+* Railsでいう `resources :posts` (CRUD) をEmberで実現する方法
+* Routeの使い方と各Routeとの関係
+
+---
+
+## さらにその次は
+
+* Ember-DATA, Model, Store, Serializer, Adapter...
+* Service, Initializer
+* Ember.Object, Ember.RSVP.*, etc...
+* ひとまず、 **最初に知っておくべきもの** からやっつけていきましょう
 
 ---
 
@@ -44,7 +71,49 @@ Behind the scenes
 * 各URL(Route)の定義を行う
 * Railsでいう `config/routes.rb` に相当
 * Routeの定義をすると、Route/Controllerも作られる
-* Railsとは違いコードは作成されず、メモリ上に展開される
+  * Railsとは違いRouteとControllerはコードは書く必要はなく、ない場合はアプリ実行時に自動で作られメモリ上に展開される
+
+---
+
+## define /hello-world
+
+```js
+// app/router.js
+Ember.Router.map(function() {
+  this.route('hello-world');
+});
+```
+
+```hbs
+{{!-- app/templates/hello-world.hbs --}}
+<h1>Hello World</h1>
+```
+
+* http://localhost:4200/hello-world
+* CoCに沿って、`app/templates/hello-world.hbs` が参照され、ブラウザにHello Worldと表示される
+
+---
+
+## Template
+
+* Handlebars
+* Controllerのプロパティを表示したり
+* HelperやComponentの使ったり
+* `{{action}}` を使ってController/Routeに処理を任せる
+
+---
+
+### Actions
+
+
+```hbs
+{{!-- app/templates/application.hbs --}}
+<form {{action "save" on="submit"}}>
+{{input value={{model.name}}
+</form>
+```
+
+---
 
 ---
 
@@ -56,18 +125,52 @@ Behind the scenes
 * Routeを `router.js` で定義するとCoCで該当するRouteとControllerは作成される
   * RouteとControllerはファイルが存在しない(定義されていない)場合は、Emberのデフォルトのものが使われる
   * CoCに該当するTemplateファイルは必須
-
 ---
 
 ### Routeの役割
 
-* サーバからAjaxでデータ(Model)をロード
-* モデルをコントローラにセットしテンプレート上で参照できるようにする
 * テンプレートの描画
+* テンプレート内の `{{action}}` を実行する
 * 画面の遷移に応じたフックメソッドがある
-  * URLのクエリの変更を検知しデータをリロードした
-* マウスクリックなどのイベントからアクションを実行する
+  * 画面上に表示したいデータをAjaxで非同期で取ってきて表示させたり
+  * URLのクエリ部分の変更を検知しデータをリロードした
 * RailsのController部分の一部を担当している
+
+---
+
+### Handling Actions
+
+```js
+// app/routes/application.js
+Ember.Route.extend({
+  actions: {
+    save() {
+      this.get('controller.model').save();
+    }
+  }
+});
+```
+
+---
+
+### Controller
+
+* RouteとTemplateの間に存在しているイメージ
+* Template内で `{{foo}}` のように値を参照している場合、Controllerのプロパティが参照される
+* Routeの `setupController` フックによって、`model` フックで取得したデータはControllerの `model` プロパティに格納される
+* Route同様Template内のアクションをハンドリングする
+  * RouteよりControllerが優先される
+  * Controller内にない場合はRouteに伝達される
+* Controllerを使わなくて済むなら使わない方が良い
+
+---
+
+### Component
+
+* ControllerとTemplateがRouteと切り離されて再利用しやすくなったものを捉えてもOK
+* 画面上の小さな部品から少し大きめの複雑なものがある
+* `{{input}}` などEmberのビルトインコンポーネント
+* 今回はあまり触れません(時間的に無理かな...)
 
 ---
 
@@ -149,8 +252,6 @@ Ember.Router.map(function() {
 ```
 
 
-[chart](https://github.com/dopin/ember-tokyo-reborn/graphs/sample-01.mmd.png)
-
 ---
 
 * `/hello-world` にアクセスすると以下のように実行される
@@ -158,26 +259,6 @@ Ember.Router.map(function() {
 <p align="center">
 <img src="./graphs/sample-02.mmd.png" width="60%">
 </p>
-
-
----
-
-## 例3 ApplicationError
-
-* `beforeModel`、 `model`、`afterModel` で返した`Promise` が `reject` されると、`error`アクションが呼ばれ、テンプレートが存在すれば描画する
-
----
-
-* /hello-world にアクセスした時に
-* ApplicationRouteでエラーが起きた場合
-
----
-
-## 例4 HelloWorldError
-
-* /hello-world にアクセスした時に
-* HelloWorldRouteでエラーが起きた場合
-
 
 ---
 
@@ -275,6 +356,7 @@ Ember.Router.map(function() {
 
 ### Path To RepositoriesRepositoryEditRoute
 
+* `/repositories/1/edit`
 * ブラウザのリフレッシュか直接URLを叩いた場合、ApplicationRouteからスタートする
 
 <p align="center">
@@ -304,3 +386,28 @@ Ember.Router.map(function() {
 
 * `RepositoriesRepositoryRoute` => `RepositoriesRepositoryEditRoute`
 * 親Routeのフックメソッドは実行されない
+
+
+
+
+
+---
+
+<!-- エラーの時は流れが違うのでどこかで軽く触れておく -->
+
+## 例3 ApplicationError
+
+* `beforeModel`、 `model`、`afterModel` で返した`Promise` が `reject` されると、`error`アクションが呼ばれ、テンプレートが存在すれば描画する
+
+---
+
+* /hello-world にアクセスした時に
+* ApplicationRouteでエラーが起きた場合
+
+---
+
+## 例4 HelloWorldError
+
+* /hello-world にアクセスした時に
+* HelloWorldRouteでエラーが起きた場合
+
