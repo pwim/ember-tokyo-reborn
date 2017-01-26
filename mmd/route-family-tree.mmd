@@ -1,0 +1,7 @@
+graph TD
+  Application-->| / | Repositories[Repositories]
+  Repositories-->| /repositories | RepositoriesIndex[RepositorieyIndex]
+  Repositories-->| /repositories/new | RepositoriesNew[RepositoriewNew]
+  Repositories-->| /repositories/:id | Repository[Repository]
+  Repository[Repository]-->| /repositories/:id | RepositoryIndex[RepositoryIndex]
+  Repository[Repository]-->| /repositories/:id/edit | RepositoryEdit[RepositoryEdit]

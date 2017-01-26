@@ -1,0 +1,5 @@
+graph TD
+  Router[Routing /hello-world]
+  Router-->ApplicationRoute[ApplicationRoute]
+  ApplicationRoute--> |render application.hbs| HelloWorldRoute[HelloWorldRoute]
+  HelloWorldRoute-->|render hello-world.hbs in outlet in application.hbs| END

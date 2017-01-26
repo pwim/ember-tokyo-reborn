@@ -32,8 +32,8 @@ Behind the scenes
 
 * CoCがあるフレームワーク
 * CoCを求めているならEmberは候補に入れてもいいはず！
-* でも、CoC = 暗黙知な時がある
-* 今日はそれについて、初心者(今でも初心者だけど)の私がハマった経験から、Emberではこうやる(Ember Way)というのを説明していきます
+* CoC = 知らないと逆に迷ったり分からなくなる
+* 今日はそれについて、初心者(今でも初心者だけど)の私がハマった経験から、Emberではこうやる、やっている(Ember Way)というのを説明していきます
 * RailsのMVCは忘れましょう(違うものです)
 
 
@@ -78,12 +78,11 @@ Behind the scenes
 * `ember s`
 * `open http://localhost:4200/`
 
-[chart](https://github.com/dopin/ember-tokyo-reborn/graphs/sample-01.mmd.png)
-
 ---
 
+* トップページアクセスすると以下のように実行される
 <p align="center">
-<img src="./graphs/sample-01.mmd.png" width="80%">
+<img src="./graphs/sample-01.mmd.png" width="60%">
 </p>
 
 ---
@@ -144,13 +143,159 @@ Ember.Route.extend({
 
 
 ```js
-// app/router.js
 Ember.Router.map(function() {
   this.route('hello-world');
 });
 ```
 
-* http://localhost:4200/hello-world/
+
+[chart](https://github.com/dopin/ember-tokyo-reborn/graphs/sample-01.mmd.png)
 
 ---
 
+* トップページアクセスすると以下のように実行される
+
+<p align="center">
+<img src="./graphs/sample-02.mmd.png" width="60%">
+</p>
+
+
+---
+
+## 例3 ApplicationError
+
+* `beforeModel`、 `model`、`afterModel` で返した`Promise` が `reject` されると、`error`アクションが呼ばれ、テンプレートが存在すれば描画する
+
+---
+
+* /hello-world にアクセスした時に
+* ApplicationRouteでエラーが起きた場合
+
+---
+
+## 例4 HelloWorldError
+
+* /hello-world にアクセスした時に
+* HelloWorldRouteでエラーが起きた場合
+
+
+---
+
+基本がわかったところで、さらに実践的なRouteを定義してみましょう
+
+---
+
+## Nested Route
+
+リポジトリの一覧と詳細、編集ページの構成例
+
+| path | description |
+| - | - |
+| /repositories | リポジトリ一覧  |
+| /repositories/new | リポジトリ新規作成  |
+| /repositories/:id | リポジトリ詳細 |
+| /repositories/:id/edit | リポジトリ編集 |
+
+---
+
+Rails / Ember
+
+```ruby
+# config/routes.rb
+resources :repository,
+          only: [:index, :show, :edit, :new]
+```
+
+＝
+
+```js
+// app/router.js
+Ember.Router.map(function() {
+  this.route('repositories', function() {
+    this.route('new');
+    this.route('repository', { path: '/:id/' },　function() {
+      this.route('edit');
+    };
+  });
+});
+```
+
+---
+
+### Rails
+
+| path | controller | template |
+| - | - | - |
+| /repositories | repositories#index | repositories/index.html.erb |
+| /repositories/new | repositories#new | repositories/new.html.erb |
+| /repositories/1 | repositories#show | repositories/edit.html.erb / repositories/repository/index.hbs  |
+| /repositories/1/edit | repositories#edit | repositories/repository/edit.hbs |
+
+* Railsは `app/views/layouts/application.html.erb` の中にデフォルトで各テンプレーを描画する
+
+
+---
+
+### Ember
+
+| path | route | template |
+| - | - | - |
+| /repositories | Repositories(Index)Route | repositories.hbs / repositories/index.hbs |
+| /repositories/new | RepositoriesNewRoute | repositories/new.hbs |
+| /repositories/1 | RepositoriesRepository(Index)Route | repositories/repository.hbs / repositories/repository/index.hbs  |
+| /repositories/1/edit | RepositoriesRepositoryEditRoute | repositories/repository/edit.hbs |
+
+* IndexRouteはRailsでいう `show` にあたる
+* Emberは、親Routeの `{{outlet}}` の中にテンプレーを描画する
+* 親Routeに `{{outlet}}` がないと何も表示されない
+
+---
+
+### Route Family
+
+| path | route | parent |
+| - | - | - |
+| /repositories | RepositoriesRoute | ApplicationRoute |
+| /repositories/new | RepositoriesNewRoute | RepositoriesRoute  |
+| /repositories/1 | RepositoriesRepositoryRoute | RepositoriesRoute |
+| /repositories/1 | RepositoriesRepositoryIndexRoute | RepositoriesRepositoryRoute |
+| /repositories/1/edit | RepositoriesRepositoryEditRoute | RepositoriesRepositoryRoute |
+
+---
+
+### Tree
+
+<p align="center">
+<img src="./graphs/route-family-tree.mmd.png" width="80%">
+</p>
+
+---
+
+### Path To RepositoriesRepositoryEditRoute
+
+* ブラウザのアクセスか、直接URLを叩いた場合
+
+<p align="center">
+<img src="./graphs/route-family-tree-path-to-edit.mmd.png" width="80%">
+</p>
+
+---
+
+### Path To RepositoriesRepositoryEditRoute
+
+<p align="center">
+<img src="./graphs/route-family-tree-path-to-edit-simple.mmd.png" width="30%">
+</p>
+
+---
+
+### From RepositoriesIndexRoute
+
+* `{{link-to 'reposotories.repository.edit'}}`
+
+<p align="center">
+<img src="./graphs/route-family-tree-path-to-edit-from-repositories-index.mmd.png" width="80%">
+</p>
+
+* `RepositoriesRepositoryRoute` => `RepositoriesRepositoryEditRoute`
+* 親Routeのフックメソッドは実行されない

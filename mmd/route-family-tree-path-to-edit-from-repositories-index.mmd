@@ -1,0 +1,8 @@
+%% Transition from RepositoryIndex to RepositoryEdit
+graph TD
+  Application-.-Repositories[Repositories]
+  Repositories-.-RepositoriesIndex[RepositoriesIndex]
+  Repositories-.-RepositoriesNew[RepositoriesNew]
+  Repositories-.-Repository[Repository]
+  Repository[Repository]-.-RepositoryIndex[RepositoryIndex]
+  Repository[Repository]-.-RepositoryEdit[RepositoryEdit]
