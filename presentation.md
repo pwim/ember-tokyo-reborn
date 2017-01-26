@@ -80,7 +80,7 @@ Behind the scenes
 
 ---
 
-* トップページアクセスすると以下のように実行される
+* トップページにアクセスすると以下のように実行される
 <p align="center">
 <img src="./graphs/sample-01.mmd.png" width="60%">
 </p>
@@ -153,7 +153,7 @@ Ember.Router.map(function() {
 
 ---
 
-* トップページアクセスすると以下のように実行される
+* `/hello-world` にアクセスすると以下のように実行される
 
 <p align="center">
 <img src="./graphs/sample-02.mmd.png" width="60%">
