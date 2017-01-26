@@ -222,9 +222,9 @@ Ember.Router.map(function() {
 
 ---
 
-### Rails
+### Rails's CoC
 
-| path | controller | template |
+| path | controller | view |
 | --- | --- | --- |
 | /repositories | repositories#index | repositories/index.html.erb |
 | /repositories/new | repositories#new | repositories/new.html.erb |
@@ -236,18 +236,20 @@ Ember.Router.map(function() {
 
 ---
 
-### Ember
+### Ember's CoC
 
-| path | route | template |
-| --- | --- | --- |
-| /repositories | Repositories(Index)Route | repositories.hbs / repositories/index.hbs |
-| /repositories/new | RepositoriesNewRoute | repositories/new.hbs |
-| /repositories/1 | RepositoriesRepository(Index)Route | repositories/repository.hbs / repositories/repository/index.hbs  |
-| /repositories/1/edit | RepositoriesRepositoryEditRoute | repositories/repository/edit.hbs |
+| path | route | controller | template |
+| --- | --- | --- | --- |
+| /repositories | RepositoriesRoute | RepositoriesController |  repositories.hbs |
+| /repositories | RepositoriesIndexRoute | RepositoriesIndexController | repositories/index.hbs |
+| /repositories/new | RepositoriesNewRoute | RepositoriesNewController | repositories/new.hbs |
+| /repositories/1 | RepositoriesRepositoryRoute | RepositoriesRepositoryController | repositories/repository.hbs  |
+| /repositories/1 | RepositoriesRepositoryIndexRoute | RepositoriesRepositoryIndexController |  repositories/repository/index.hbs  |
+| /repositories/1/edit | RepositoriesRepositoryEditRoute | RepositoriesRepositoryEditController | repositories/repository/edit.hbs |
 
-* IndexRouteはRailsでいう `show` にあたる
-* Emberは、親Routeの `{{outlet}}` の中にテンプレーを描画する
+* Emberは、親Routeのテンプレート内の `{{outlet}}` の中にテンプレートを描画する(入れ子)
 * 親Routeに `{{outlet}}` がないと何も表示されない
+* IndexRouteはRailsでいう `show` にあたる
 
 ---
 
@@ -273,7 +275,7 @@ Ember.Router.map(function() {
 
 ### Path To RepositoriesRepositoryEditRoute
 
-* ブラウザのアクセスか、直接URLを叩いた場合
+* ブラウザのリフレッシュか直接URLを叩いた場合、ApplicationRouteからスタートする
 
 <p align="center">
 <img src="./graphs/route-family-tree-path-to-edit.mmd.png" width="80%">
@@ -291,7 +293,10 @@ Ember.Router.map(function() {
 
 ### From RepositoriesIndexRoute
 
-* `{{link-to 'reposotories.repository.edit'}}`
+```hbs
+{{!-- app/templates/repositories/index.hbs --}}
+{{link-to 'reposotories.repository.edit'}}
+```
 
 <p align="center">
 <img src="./graphs/route-family-tree-path-to-edit-from-repositories-index.mmd.png" width="80%">
