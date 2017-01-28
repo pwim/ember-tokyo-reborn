@@ -1,40 +1,49 @@
-<!-- $theme: default -->
-
 # Ember.js
 
-Behind the scenes
+Second Step (Router and etc)
+
 
 ---
 
-## Summary
+# お品書き
 
-* 対象者
-* Emberとは
-* Ember.jsの各コンポーネントの役割の説明
-  * Router Route Template Controller
-  * Model Serializer Adapter Store
-  * Service
-  * Initializer
-  * Component
-* 実例をもとに上記を説明
-  * Rails developerが混乱するところも
+- Emberとは
+- Ember.jsのCoC各コンポーネントの役割の説明
+- 実例をもとに上記を説明
+  - Rails developerが混乱するところもピックアップ
 
 ---
 
 
 ## 対象者
 
-* Ember.jsでWebアプリをEmber-CLIを使って開発したことがある方
+- Ember.jsでWebアプリをEmber-CLIを使って開発したことがあり、
+- Emberのファイル構成を知っているが、
+- いまいちEmberでのやり方がわからないという方
+- Railsでいう `resources :post` をEmberでどうやるのかわからない方
 
 ---
 
 ## Ember
 
 * CoCがあるフレームワーク
-* CoCを求めているならEmberは候補に入れてもいいはず！
 * CoCは知らないと逆に迷ったり分からなくなる
-* 今日はその辺について、初心者の私がハマった経験から、Emberではこうやる・やっている(Ember Way)というのを説明していきます
+* 今回はそのCoCと各コンポーネント(MVCなど)を説明していきます
 * RailsのMVCは忘れましょう(違うものです。時々違いを説明するけど)
+
+^EmberはCoC convention over configuration(設定よりも規約)があるフレームワークです。
+つまり、Emberで普通に開発していくには、まずこのCoCを知る必要があります。
+
+---
+
+## Emberのコンポーネント
+
+- Router Route Template Controller
+- Component
+- Model Serializer Adapter Store
+- Service
+- Initializer
+- etc... a lot!!
 
 ---
 
@@ -44,7 +53,7 @@ Behind the scenes
 * Route
 * Template
 * Controller
-* これらのCoC(と命名規則)と役割
+* これらのCoCと役割
 * Componentの使い方と活用方法
   * これはTemplateとControllerを知っていれば割と簡単 
 
@@ -55,6 +64,8 @@ Behind the scenes
 * Railsでいう `resources :posts` (CRUD) をEmberで実現する方法
 * Routeの使い方と各Routeとの関係
 
+今回のメイントピックです！
+
 ---
 
 ## さらにその次は
@@ -62,7 +73,8 @@ Behind the scenes
 * Ember-DATA, Model, Store, Serializer, Adapter...
 * Service, Initializer
 * Ember.Object, Ember.RSVP.*, etc...
-* ひとまず、 **最初に知っておくべきもの** からやっつけていきましょう
+
+ひとまず、 **最初に知っておくべきもの** からやっつけていきましょう
 
 ---
 
@@ -71,11 +83,12 @@ Behind the scenes
 * 各URL(Route)の定義を行う
 * Railsでいう `config/routes.rb` に相当
 * Routeの定義をすると、Route/Controllerも作られる
-  * Railsとは違いRouteとControllerはコードは書く必要はなく、ない場合はアプリ実行時に自動で作られメモリ上に展開される
+  * Railsとは違いRouteとControllerはコード存在しなくても良い
+  * ない場合はデフォルトのものが使用される
 
 ---
 
-## define /hello-world
+## /hello-world
 
 ```js
 // app/router.js
@@ -91,6 +104,14 @@ Ember.Router.map(function() {
 
 * http://localhost:4200/hello-world
 * CoCに沿って、`app/templates/hello-world.hbs` が参照され、ブラウザにHello Worldと表示される
+
+^
+この仕組みはEmberを少し触ったことがある方はご存知かと思います。
+hello-world routeを定義し、hello-world.hbsを作成すると、それ以外のコードを書かなくても、/hello-worldにアクセスすれば、hello-worold.hbsの中身が表示されます。
+裏側で何が起きているかは後ほど説明します。
+You might know this behavior if you aleady tried Ember.
+Without writing other code, Ember will display Hello World on the browser when you access to /hello-world.
+I'm going to talk about the background of this feature later.
 
 ---
 
@@ -109,11 +130,9 @@ Ember.Router.map(function() {
 ```hbs
 {{!-- app/templates/application.hbs --}}
 <form {{action "save" on="submit"}}>
-{{input value={{model.name}}
+{{input value=model.name}}
 </form>
 ```
-
----
 
 ---
 
@@ -122,9 +141,7 @@ Ember.Router.map(function() {
 * 各URL毎に存在する
 * 暗黙的に作られるRouteがある(index)
 * Emberを理解するには、まずRouteをしっかり理解する必要がある
-* Routeを `router.js` で定義するとCoCで該当するRouteとControllerは作成される
-  * RouteとControllerはファイルが存在しない(定義されていない)場合は、Emberのデフォルトのものが使われる
-  * CoCに該当するTemplateファイルは必須
+
 ---
 
 ### Routeの役割
@@ -140,6 +157,13 @@ Ember.Router.map(function() {
 
 ### Handling Actions
 
+```hbs
+{{!-- app/templates/application.hbs --}}
+<form {{action "save" on="submit"}}>
+{{input value=model.name}}
+</form>
+```
+
 ```js
 // app/routes/application.js
 Ember.Route.extend({
@@ -153,11 +177,16 @@ Ember.Route.extend({
 
 ---
 
-### Controller
+## Controller
 
 * RouteとTemplateの間に存在しているイメージ
 * Template内で `{{foo}}` のように値を参照している場合、Controllerのプロパティが参照される
 * Routeの `setupController` フックによって、`model` フックで取得したデータはControllerの `model` プロパティに格納される
+
+---
+
+## Controller
+
 * Route同様Template内のアクションをハンドリングする
   * RouteよりControllerが優先される
   * Controller内にない場合はRouteに伝達される
@@ -165,12 +194,27 @@ Ember.Route.extend({
 
 ---
 
+### Router, Route & Template
+
+* シンプルな画面は、Routerでrouteの定義とtemplateさえあればOK
+* 1画面、1route, 1template, 1controllerと捉えておいてOK
+  * ただしネストがある
+
+---
+
 ### Component
 
 * ControllerとTemplateがRouteと切り離されて再利用しやすくなったものを捉えてもOK
 * 画面上の小さな部品から少し大きめの複雑なものがある
+  * Data Down Actions Up / Smart component
 * `{{input}}` などEmberのビルトインコンポーネント
-* 今回はあまり触れません(時間的に無理かな...)
+* 今回は触れません(時間的に無理かな...)
+
+---
+
+# 裏側に潜入
+
+役者は揃ったので、Emberが裏側で何をしているのか、先ほどのHello World例も含めて見ていきます。
 
 ---
 
@@ -184,9 +228,9 @@ Ember.Route.extend({
 ---
 
 * トップページにアクセスすると以下のように実行される
-<p align="center">
-<img src="./graphs/sample-01.mmd.png" width="60%">
-</p>
+
+![inline](./graphs/sample-01.mmd.png)
+
 
 ---
 
@@ -256,9 +300,7 @@ Ember.Router.map(function() {
 
 * `/hello-world` にアクセスすると以下のように実行される
 
-<p align="center">
-<img src="./graphs/sample-02.mmd.png" width="60%">
-</p>
+![inline](./graphs/sample-02.mmd.png)
 
 ---
 
@@ -272,8 +314,8 @@ Ember.Router.map(function() {
 
 | path | description |
 | --- | --- |
-| /repositories | リポジトリ一覧  |
-| /repositories/new | リポジトリ新規作成  |
+| /repositories | リポジトリ一覧 |
+| /repositories/new | リポジトリ新規作成 |
 | /repositories/:id | リポジトリ詳細 |
 | /repositories/:id/edit | リポジトリ編集 |
 
@@ -348,9 +390,9 @@ Ember.Router.map(function() {
 
 ### Tree
 
-<p align="center">
-<img src="./graphs/route-family-tree.mmd.png" width="80%">
-</p>
+
+![inline](./graphs/route-family-tree.mmd.png)
+
 
 ---
 
@@ -359,17 +401,16 @@ Ember.Router.map(function() {
 * `/repositories/1/edit`
 * ブラウザのリフレッシュか直接URLを叩いた場合、ApplicationRouteからスタートする
 
-<p align="center">
-<img src="./graphs/route-family-tree-path-to-edit.mmd.png" width="80%">
-</p>
+
+![inline](./graphs/route-family-tree-path-to-edit.mmd.png)
 
 ---
 
 ### Path To RepositoriesRepositoryEditRoute
 
-<p align="center">
-<img src="./graphs/route-family-tree-path-to-edit-simple.mmd.png" width="30%">
-</p>
+
+![inline](./graphs/route-family-tree-path-to-edit-simple.mmd.png)
+
 
 ---
 
@@ -377,18 +418,31 @@ Ember.Router.map(function() {
 
 ```hbs
 {{!-- app/templates/repositories/index.hbs --}}
-{{link-to 'reposotories.repository.edit'}}
+{{link-to '変更' 'reposotories.repository.edit'}}
 ```
 
-<p align="center">
-<img src="./graphs/route-family-tree-path-to-edit-from-repositories-index.mmd.png" width="80%">
-</p>
+* /repositories => /repositories/:id/edit
 
-* `RepositoriesRepositoryRoute` => `RepositoriesRepositoryEditRoute`
-* 親Routeのフックメソッドは実行されない
+---
+
+### From RepositoriesIndexRoute
+
+![inline](./graphs/route-family-tree-path-to-edit-from-repositories-index.mmd.png)
 
 
+1. `RepositoriesRepositoryRoute`
+2. `RepositoriesRepositoryEditRoute`
 
+親Routeのフックメソッドは実行されない
+
+---
+
+
+## CRUDを実装してみよう
+
+TODO: ここから一覧の表示と編集画面までざっと説明していく
+
+主な説明ポイントは、Emberでは各Routeでモデルを取得すること、子Routeはそれを利用する方が効率が良いこと
 
 
 ---
@@ -411,3 +465,16 @@ Ember.Router.map(function() {
 * /hello-world にアクセスした時に
 * HelloWorldRouteでエラーが起きた場合
 
+---
+
+## その他
+
+複数のリソースを取得する例
+
+### afterModel
+
+メインのモデルに紐づくデータを取得するケース
+
+### RSVP.hash
+
+ダッシュボードのような、複数のモデルを画面に表示するケース
