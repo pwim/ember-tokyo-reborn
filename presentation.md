@@ -545,7 +545,7 @@ end
 ### Endpoints
 
 | Path | Description |
-| -- | -- |
+| --- | --- |
 | /orgs/:owner/repos | an org's repositories |
 | /repos/:owner/:repo | a repository detail |
 | /repos/:owner/:repo/commits | a repository's recent commits |
