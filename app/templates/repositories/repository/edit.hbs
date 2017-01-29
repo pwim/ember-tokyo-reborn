@@ -1,0 +1,12 @@
+<form>
+  <div class="form-group">
+    <label class="control-label">Name</label>
+    <input class="form-control" value={{model.name}} disabled>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Description</label>
+    <textarea class="form-control"disabled></textarea>
+  </div>
+  <button type="button" class="btn btn-primary" disabled>Save</button>
+  <button type="button" class="btn btn-default" {{action "cancel"}}>Cancel</button>
+</form>

@@ -20,7 +20,8 @@
           {{link-to 'Dashboard' 'index'}}
         {{/active-link}}
         {{#active-link}}
-          {{link-to 'Repositories' 'repositories.index'}}
+          {{link-to 'Repositories' 'repositories'}}
+          {{outlet 'repository-list'}}
         {{/active-link}}
       </ul>
     </div>

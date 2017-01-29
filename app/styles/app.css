@@ -1,1 +1,19 @@
 @import 'dashboard.css';
+
+.repository-list-nav a {
+  text-decoration: none;
+  color: #337ab7;
+  display: block;
+  line-height: 2em;
+  padding-left: 10px;
+}
+
+.repository-list-nav a:hover {
+  background-color: #eee;
+}
+
+.repository-list-nav li.active a{
+  font-weight: bold;
+  background-color: #428bca;
+  color: #fff;
+}

@@ -1,0 +1,7 @@
+<ul class="list-unstyled repository-list-nav" style="margin-left:20px">
+  {{#each model as |repo| }}
+    {{#active-link}}
+    {{link-to repo.name 'repositories.repository' repo.name}}
+    {{/active-link}}
+  {{/each}}
+</ul>

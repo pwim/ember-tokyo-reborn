@@ -207,7 +207,7 @@ Ember.Route.extend({
 * ControllerとTemplateがRouteと切り離されて再利用しやすくなったものを捉えてもOK
 * 画面上の小さな部品から少し大きめの複雑なものがある
   * Data Down Actions Up / Smart component
-* `{{input}}` などEmberのビルトインコンポーネント
+* `{{link-to}}` などEmberのビルトインコンポーネント
 * 今回は触れません(時間的に無理かな...)
 
 ---
@@ -262,6 +262,8 @@ Ember.Route.extend({
 
 ---
 
+### behind the scenes
+
 ```hbs
 {{!-- app/templates/application.hbs --}}
 <section>
@@ -305,6 +307,8 @@ Ember.Router.map(function() {
 ---
 
 基本がわかったところで、さらに実践的なRouteを定義してみましょう
+
+わからん、という方はEmber Inspectorとにらめっこしてください :bow:
 
 ---
 
@@ -433,17 +437,235 @@ Ember.Router.map(function() {
 1. `RepositoriesRepositoryRoute`
 2. `RepositoriesRepositoryEditRoute`
 
-親Routeのフックメソッドは実行されない
+- modelフックには落とし穴があるので後ほど詳しく説明します
 
 ---
 
-
-## CRUDを実装してみよう
+### GitHub Viewerを実装してみよう
 
 TODO: ここから一覧の表示と編集画面までざっと説明していく
 
 主な説明ポイントは、Emberでは各Routeでモデルを取得すること、子Routeはそれを利用する方が効率が良いこと
 
+
+---
+
+## Task
+
+* GitHub APIから以下の情報を取得し画面に表示する
+* emberjs orgのリポジトリ
+* リポジトリの詳細情報ページ
+* 最近のコミットを5件詳細ページに表示
+* contributorsを別ページに表示
+
+---
+
+## URLs
+
+| Path | Description |
+| --- | ---- |
+| /repositories | emberjs org repository list |
+| /repositories/:name | repository detail |
+| /repositories/:name/contributors | repository collaborator list |
+
+---
+
+### Screen
+
+---
+
+### Rails
+
+- Railsでturoblinksやajaxを使わない場合
+- 各URL毎にHTMLを全部取得する
+
+---
+
+### Rails
+
+```ruby
+resources :repository, only: [:index, :show] do
+  get 'contributors', on: :member
+end
+
+class RepositoriesController < ApplicationController
+  before_action :set_repository, only: [:show, :contributors]
+  def index
+    @repositories = Repository.where(org: 'emberjs').all
+  end
+
+  private
+
+  def set_repository
+    @repository = Repository.find_by(name: params[:name])
+  end
+end
+
+class Repository < ApplicationRecord
+  has_many :commits
+  has_many :contributors, class_name: User
+end
+```
+
+---
+
+### Rails
+
+`repositories/show.html.erb`
+
+```erb
+<%= render 'header' %>
+<h2>Recent Commits</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Author</th>
+      <th>Message</th>
+```
+
+`repositories/contributors.html.erb`
+
+```erb
+<%= render 'header' %>
+<ul>
+  <% @repository.contributors.each do |user| %>
+```
+
+---
+
+### Emberではどうする？
+
+- SPA
+- 提供されているAPIからデータを取得する必要がある
+- ページごとに必要なデータを毎回全部取得してHTMLを全置き換え？ :no_good:
+- 画面に必要なデータだけ取得して、必要な部分だけ置き換える :ok_woman:
+
+---
+
+### Endpoints
+
+| Path | Description |
+| -- | -- |
+| /orgs/:owner/repos | an org's repositories |
+| /repos/:owner/:repo | a repository detail |
+| /repos/:owner/:repo/commits | a repository's recent commits |
+| /repos/:owner/:repo/commits/:sha | a repository's commit detail |
+
+
+
+---
+
+---
+
+### Convention of model hook
+
+model hook will not be executed every time.
+モデルフックは毎回実行されるわけではありません。
+
+# :scream:
+
+ In some cases, your overriding code will be ignored.
+ 上書きしたコードが無視されることがあります。
+
+---
+
+### Convention of model hook
+
+```js
+// app/routes/repositories.js
+Ember.Route.extend({
+  model() { [{name: 'a'}, {name: 'b'}] }
+});
+
+// app/routes/repositories/repository.js
+Ember.Route.extend({
+  model(params) {
+    let repo = this.modelFor('repositories').findBy('name', params.name);
+    // here's the important part; ここ重要！
+    return this.ajax.request(`${api}/repos/${repo.name}/`);
+  }
+});
+
+// app/routes/repositories/edit.js
+Ember.Route.extend({
+  model() {
+   return this.modelFor('repository');
+  }
+});
+```
+
+---
+
+### Convention of model hook
+
+Passing non-integer nor non-string
+
+```js
+this.transitionTo('repositories.repository', repo);
+                                             ^^^^
+```
+
+```hbs
+{{link-to 'Show' 'repositories.repository' repo}}
+                                           ^^^^
+```
+
+```js
+// The executed model hook will be like this.
+// The ajax request will not be executed.
+// app/routes/repositories/repository.js
+Ember.Route.extend({
+  model(params) {
+    return this.modelFor('repositories').findBy('name', params.name);
+  }
+});
+```
+
+---
+
+### Convention of model hook
+
+Passing integer or string...
+
+```js
+this.transitionTo('repositories.repository', repo.name);
+                                             ^^^^^^^^^
+```
+
+```hbs
+{{link-to 'Show' 'repositories.repository' repo.name}}
+                                           ^^^^^^^^^
+```
+
+```js
+// The executed model hook will be as-is.
+// app/routes/repositories/repository.js
+Ember.Route.extend({
+  model(params) {
+    let repo = this.modelFor('repositories').findBy('name', params.name);
+    return this.ajax.request(`${api}/repos/${repo.name}/`);
+  }
+});
+```
+
+---
+
+### Convention of model hook
+
+- link-to transitionToのパラメータがintかstringを渡すとmodelフックは書いたコードの通り実行される
+- それ以外の時はEmberのconventionによって解決される
+- 単純にoverrideしたつもりでも、挙動が呼び出し方で変わるので注意が必要 :bomb: :bomb: :bomb:
+- http://emberjs.com/api/classes/Ember.Route.html#method_model
+
+:sweat_smile:
+
+---
+
+^
+RepositoryIndexRouteを省略するとRepositoryRouteのmodelが使われる、ように見えます。
+が、ブラウザのリフレッシュの時はそのように見えて、別のRouteからの遷移の時はmodelは親Routeから引き継がれません。
+liveReloadを使っていて開発していると、その画面を開発している時は気がつきにくいので、覚えておいた方が良いですね。
+親Routeのmodelに依存するときは、RouteのmodelでmodelForで明示的に呼び出します。
 
 ---
 

@@ -11,13 +11,13 @@
       </tr>
     </thead>
     <tbody>
-      {{#each model as |repos|}}
+      {{#each model as |repo|}}
       <tr>
-        <td>{{link-to repos.name 'repositories.repository' repos}}</td>
-        <td>{{repos.created_at}}</td>
-        <td>{{repos.updated_at}}</td>
-        <td>{{repos.open_issues_count}}</td>
-        <td>{{repos.language}}</td>
+        <td>{{link-to repo.name 'repositories.repository' repo.name}}</td>
+        <td>{{repo.created_at}}</td>
+        <td>{{repo.updated_at}}</td>
+        <td>{{repo.open_issues_count}}</td>
+        <td>{{repo.language}}</td>
       </tr>
       {{/each}}
     </tbody>

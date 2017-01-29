@@ -7,4 +7,12 @@ export default Ember.Route.extend({
     return this.get('ajax').request('https://api.github.com/orgs/emberjs/repos');
   },
 
+  renderTemplate() {
+    this.render();
+    this.render('repositories/_repository_list', {
+      outlet: 'repository-list',
+      into: 'application',
+    });
+  }
+
 });

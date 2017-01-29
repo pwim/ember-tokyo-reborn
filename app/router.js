@@ -9,7 +9,8 @@ const Router = Ember.Router.extend({
 Router.map(function() {
   this.route('repositories', function() {
     this.route('repository', { path: '/:name' }, function() {
-      this.route('collaborators');
+      this.route('contributors');
+      this.route('edit');
     });
   });
 });
