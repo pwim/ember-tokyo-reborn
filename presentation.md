@@ -559,8 +559,7 @@ Ember.Router.map(function() {
 ### Routeの理解を深める
 
 - Nested Routeの説明をしました
-- うまく説明ができないので、実際に作ったサンプルアプリを例に
-- どのように実装していくか見ていきましょう
+- うまく説明ができないので、実際に作ったサンプルアプリを例に、どのように実装していくか見ていきましょう
 
 ---
 
@@ -568,12 +567,12 @@ Ember.Router.map(function() {
 
 - GitHubにあるemberjs orgのリポジトリ閲覧アプリ
 - SPA(Ember)
-- 各リポジトリのURLは直リンクできるように
+- 各ページは直リンクできるようにする
 - 一覧を画面左、画面右に詳細で表示されるmaster & detail形式
 
 ---
 
-### サンプルアプリ
+### サンプルアプリ(完成見本)
 
 ![inline](./screenshots/github-viewer.png)
 
@@ -732,7 +731,7 @@ Router.map(function() {
 
 
 - APIからリポジトリ一覧情報を取得し表示する
-- 書くリポジトリの詳細ページにリンクする
+- 各リポジトリの詳細ページにリンクする
 - RepositoriesRepositoryRoute(詳細)の親
 - 親(祖先)Routeのmodelは子Routeから参照可
   - 有効活用することで無駄なajaxが減る
@@ -765,6 +764,7 @@ Router.map(function() {
 ### リポジトリ一覧
 
 ```js
+// app/routes/repositories.js
 export default Ember.Route.extend({
   ajax: Ember.inject.service(),
 
@@ -895,6 +895,7 @@ export default Ember.Route.extend({
 ### リポジトリ一覧(左側)
 
 ```js
+// app/routes/repositories.js
 export default Ember.Route.extend({
   ajax: Ember.inject.service(),
 
@@ -967,17 +968,17 @@ export default Ember.Route.extend({
 {{!-- app/templates/repositories/repository.hbs --}}
 <h1 class="page-header">{{link-to model.name 'repositories.repository' model.name}}</h1>
 <ul class="list-inline">
-  {{#active-link}}
-    {{link-to 'Collaborator' 'repositories.repository.contributors' model.name class="btn btn-default"}}
-  {{/active-link}}
-  {{#active-link}}
-    {{link-to 'Edit' 'repositories.repository.edit' model.name class="btn
-    btn-default"}}
-  {{/active-link}}
+{{#active-link}}
+  {{link-to 'Collaborator' 'repositories.repository.contributors' model.name class="btn btn-default"}}
+{{/active-link}}
+{{#active-link}}
+  {{link-to 'Edit' 'repositories.repository.edit' model.name class="btn btn-default"}}
+{{/active-link}}
 </ul>
 
 {{outlet}}
 ```
+
 
 :tada: 次はindex
 
@@ -1418,7 +1419,7 @@ Ember.Route.extend({
 
 ---
 
-### afterModel :
+### afterModel :speak_no_evil:
 
 ```js
 Ember.Route.extend({
@@ -1441,7 +1442,7 @@ Ember.Route.extend({
 
 ---
 
-### setupController
+### setupController :see_no_evil:
 
 ```js
 Ember.Route.extend({
@@ -1457,6 +1458,7 @@ Ember.Route.extend({
         })
         .catch((error)=> {
           this.transitionToRoute('error'); // ? no good
+          // You don't want to pass errors as a parameter.
         });
   }
 });
