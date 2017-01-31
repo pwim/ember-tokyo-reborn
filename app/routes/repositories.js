@@ -9,7 +9,7 @@ export default Ember.Route.extend({
 
   renderTemplate() {
     this.render();
-    this.render('repositories/_repository_list', {
+    this.render('repositories/-repository-list', {
       outlet: 'repository-list',
       into: 'application',
     });

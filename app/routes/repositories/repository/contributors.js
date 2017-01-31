@@ -5,7 +5,7 @@ export default Ember.Route.extend({
 
   model() {
     let repo = this.modelFor('repositories.repository');
-    let url = `https://api.github.com/repos/${repo.owner.login}/${repo.name}/contributors`;
+    let url = `${repo.url}/contributors`;
     return this.get('ajax').request(url);
   }
 });

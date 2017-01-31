@@ -6,8 +6,7 @@ export default Ember.Route.extend({
   model() {
     let repo = this.modelFor('repositories.repository');
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let repoUrl = `https://api.github.com/repos/${repo.owner.login}/${repo.name}`;
-      let commitsUrl = `${repoUrl}/commits`;
+      let commitsUrl = `${repo.url}/commits`;
       let recentCommits = [];
       this.get('ajax').request(commitsUrl).then((commits) => {
         Ember.RSVP.all(commits.slice(0, 5).map((commit) => {
