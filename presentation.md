@@ -1,22 +1,86 @@
 # Ember.js
 
-Second Step (Router and etc)
+The Second Step (Router, Route and etc)
 
 
 ---
 
-# お品書き
+### お品書き(1/)
 
-- 対象者
+- 自己紹介
+- Ember.js Tokyoについて
+- このスライドの対象者
 - 免責事項
 - Emberについて
 - Ember.jsの各コンポーネントの役割と関連するCoCの説明
-- 実例をもとに上記を説明
+
+---
+
+### お品書き(2/)
+
+- Router Route Template Componentの雑な説明
+- シンプルなRouteの例
+- Nested Routeの例
+- サンプルアプリでRouter/Route/Templateを説明
   - Rails developerが混乱するところもピックアップ
 
 ---
 
-## 対象者
+### お品書き(3/)
+
+- Router Route Templateのまとめ
+- Convention of model hook
+- ajaxはどこでやるべきか
+- その他のComponentを雑に説明
+  - Ember.Objext Misin Service
+  - Store Model Adapter Serializer Deserializer
+  - Addon etc...
+
+---
+
+### お品書き(4/4)
+
+- モデルのソートはどこですべきか？
+- モデルのフィルターはどこですべきか？
+- :ice_cream: 本日のデザート(ありません)
+
+お腹いっぱいで帰ってください。
+
+---
+
+### 自己紹介
+
+- Murasaki-san / dopin / whatever
+- New Organizer :flushed: Help me!
+- Freelance
+- I :heart_eyes: :sake: :wine_glass: and :yen:, :dog2: :cat2: but :no_good: :smoking:
+- I wanna be a good guy in Splatoon always. =>
+
+---
+
+### Ember.js Tokyo
+
+- :tada: Reborn!!
+- Next March 23rd 2017 at Sakura internet
+- Next Next late in May 2017 at Sakra internet
+- We're looking for companies which provide us venue. :eyes: :bow:
+- https://ember-japan-community-slackin.herokuapp.com/
+- Stay tuned
+
+---
+
+### 余談
+
+- 私の個人的な思い
+- 昔:Railsを始めたけど、学ぶことが多い(Ruby、SQL、セキュリティ...)
+- 今:Emberも似ている(ES6、SPA、非同期プログラミング...)
+- Railsを学んで良かった使って良かった
+- Emberもそう、だから手助けになれば幸い
+- 楽な道じゃないけど頑張ろうぜ
+
+---
+
+## このスライドの対象者
 
 - Ember.jsでWebアプリをEmber-CLIを使って開発したことがあり、
 - Emberのファイル構成を知っているが、
@@ -37,6 +101,18 @@ Second Step (Router and etc)
 
 ---
 
+### 免責事項
+
+:hand:
+
+- 以下の話はしません :scissors:
+  - Route transition
+  - queryParams
+
+大事な機能なのであえて触れておきました :bow:
+
+---
+
 ## Ember
 
 * CoCがあるフレームワーク
@@ -49,10 +125,10 @@ Second Step (Router and etc)
 
 ## Emberのコンポーネント
 
-- Router Route Template Controller
-- Component
+- Router Route Template Controller　Component
+- Ember.Object
 - Model Serializer Adapter Store
-- Service
+- Service Mixin
 - Initializer
 - etc... a lot!!
 
@@ -126,12 +202,27 @@ I'm going to talk about the background of this feature later.
 
 ---
 
+### Router: Route Name
+
+- routeを宣言すると使える
+- link-to transitionTo modelForなどで使う
+- さりげなく出てくるので、わからない時は質問してください :bow:
+
+```hbs
+{{link-to 'Go to hello world' 'hello-world'}}
+                               ^^^^^^^^^^^
+{{link-to 'Post index' 'posts'}}
+                        ^^^^^
+```
+
+---
+
 ## Template
 
 * Handlebars
 * Controllerのプロパティを表示したり
-* HelperやComponentの使ったり
-* `{{action}}` を使ってController/Routeに処理を任せる
+* HelperやComponentを使ったり
+* `{{action}}` を使ってDOMイベントをController/Routeに処理を任せる
 
 ---
 
@@ -159,9 +250,9 @@ I'm going to talk about the background of this feature later.
 
 * データの取得(ajax)
 * テンプレートの描画
-* テンプレート内の `{{action}}` を実行する
-* 画面の遷移に応じたフックメソッドがある
-* イベントや状態によって別画面遷移
+* テンプレート内の `{{action}}` を実行するなど
+* これらの画面の遷移に応じたフックメソッドがある
+* イベントや状態によって別画面に遷移させたり
 * RailsのController部分を担当しているとも言える(かな？)
 
 ---
@@ -207,7 +298,7 @@ Ember.Route.extend({
 - Modelは必須ではありません（条件あり)
   - storeを使わない(個人的には使用すべきだと思う)
   - link-to transitionToなどでinteger/string以外を渡さない
-- 今回はEmberDATAの説明はありません :bow:
+
 
 ---
 
@@ -233,7 +324,15 @@ export default Ember.Route.extend({
 
 ---
 
-### Route#model
+### Route#modelを理解する
+
+- 画面に必要なデータは基本modelで行う
+- Promiseとそれ以外では挙動が違う
+- 大事なので詳しく
+
+---
+
+### Route#modelを理解する
 
 Promise: 解決したら次へ
 
@@ -305,7 +404,7 @@ model (params) {
 
 ### Component
 
-* ControllerとTemplateがRouteと切り離されて統合され再利用しやすくなったもの
+* ControllerとTemplateがRouteと切り離されて統合され再利用しやすくなったもの(Ember流WebComponent)
 * 画面上の小さな部品から少し大きめの複雑なものがある
   * Data Down Actions Up / Smart component
 * input link-to などEmberのビルトインコンポーネント
@@ -422,7 +521,7 @@ Ember.Router.map(function() {
 
 ## Nested Route
 
-リポジトリの一覧と詳細、編集ページの構成例
+リポジトリの一覧と詳細、編集ページの構成例(あるある)
 
 | path | description |
 | --- | --- |
@@ -598,16 +697,6 @@ Ember.Router.map(function() {
 
 ---
 
-## URLs
-
-| Path | Description |
-| --- | ---- |
-| /repositories | emberjs org repository list |
-| /repositories/:name | repository detail |
-| /repositories/:name/contributors | repository contributor list |
-
----
-
 ### Railsの処理の流れ
 
 ![inline](./graphs/rails.mmd.png)
@@ -692,6 +781,17 @@ GitHub APIのendpoints
 
 ---
 
+## App URLs
+
+| Path | Description |
+| --- | ---- |
+| /repositories | emberjs org repository list |
+| /repositories/:name | repository detail |
+| /repositories/:name/contributors | repository contributor list |
+
+
+---
+
 ### Router
 
 ```js
@@ -721,7 +821,7 @@ Router.map(function() {
 
 ---
 
-### リポジトリ一覧
+### リポジトリ一覧の実装
 
 ![inline](./screenshots/repositories.png)
 
@@ -917,7 +1017,7 @@ export default Ember.Route.extend({
 
 ---
 
-### リポジトリ詳細
+### リポジトリ詳細の実装
 
 ![inline](./screenshots/repository.png)
 
@@ -984,7 +1084,7 @@ export default Ember.Route.extend({
 
 ---
 
-### リポジトリ詳細 (index)
+### リポジトリ詳細 (index)の実装
 
 ![inline](./screenshots/repository-index.png)
 
@@ -1089,7 +1189,7 @@ export default Ember.Route.extend({
 
 ---
 
-### リポジトリのコントリビューター
+### リポジトリのコントリビューターの実装
 
 ![inline](./screenshots/contributors.png)
 
@@ -1170,7 +1270,7 @@ export default Ember.Route.extend({
 
 ---
 
-### リポジトリ編集 
+### リポジトリ編集画面の実装
 
 ![inline](./screenshots/edit.png)
 
@@ -1229,9 +1329,12 @@ export default Ember.Route.extend({
 
 ---
 
-# Questions?
+### Router Route Templateのまとめ
 
-...の前に
+- この3つのコンポーネントが基本
+- Nested Route
+  - outlet
+  - model
 
 ---
 
@@ -1365,8 +1468,7 @@ liveReloadを使っていて開発していると、その画面を開発して�
 - ajaxリクエスト失敗時の対処
 - errorのtemplate/outletは別
 - `beforeModel`、 `model`、`afterModel` で返した`Promise` が `reject` されると、`error`アクションが呼ばれ、テンプレートが存在すれば描画する
-
-TODO: エラーについて追加
+- この辺は詳しくないので説明できません :bow:
 
 ---
 
@@ -1484,8 +1586,250 @@ Ember.Route.extend({
 
 ---
 
-今日はここまでです。 :bow:
-今日説明できてない部分についてはまたの機会に。
+### その他のコンポーネント
+
+- Ember.Object Mixin Service
+- Ember DATA = Store, Model, Adapter, Serializer, Deserializer
+- Initializer
+- Addon
+- etc...
+
+---
+
+### Ember.Object
+
+- EmberではあらゆるところでEmber.Objectが使われている
+- Vanilla.jsでは機能が足りない
+- Ember.***.extend, Mixin はEmber.Objectの機能
+- 基本なのでガイドは読んでおきましょう
+- https://guides.emberjs.com/v2.11.0/object-model/
+
+---
+
+### Service
+
+- Ember.Service、Ember.Objectの拡張
+- Emberアプリが使われている間ずっと単一で存在するオブジェクト
+- Session, Geolocation, Websockets, サーバから送られてくる通知や
+- Ember DATAの仕様にマッチしていないAPIとのやりとりに使う
+- https://guides.emberjs.com/v2.11.0/applications/services/
+
+---
+
+### Store 
+
+- 実はサンプルアプリには問題があります
+- 仮にリポジトリ名を変更できたとします
+- 先ほどの実装では左側のリストは古い名前のままで更新されません :bomb:
+- ここでStore、Ember DATAの出番です
+
+--- 
+### Store
+
+- Storeはブラウザ上のRDBMSのようなものです
+- データ(モデル)を一元管理します
+- データを変更するとobserverに伝播されます
+- データはブラウザのメモリ上に保管されるので永続的ではありません
+- データを永続化するにはajaxでサーバと通信するか、LocalStorageなどを使う必要があります
+
+---
+
+### Model
+
+- モデルはAPIが提供するデータの型定義
+- db/schema.rb + ActiveRecord
+
+| DS.Model | RDBMS |
+| --- | --- |
+| Model | Table |
+| attribute | column |
+| Computed Property | ? |
+
+---
+
+### Model
+
+- Post Modelの定義の例
+
+```js
+import DS from 'ember-data';
+export default DS.Model.extend({
+  // idは必須、ただし宣言は不要、文字列扱いなのでソート時は注意
+  author: DS.belongsTo('user'),
+  title: DS.attr('string'),
+  comments: DS.hasMany('comment'),
+});
+```
+
+---
+
+### Model
+
+- Modelの機能
+
+```js
+let post = this.store.find('post', 1) // Post.find(1)
+post.set('title', 'Hey!'); // @post.title = 'hey'
+post.get('hasDirtyAttributes'); // @post.changed? # => true
+post.save(); // @post.save
+```
+
+---
+
+### Adapter
+
+- MySQLやPostgreSQLのようにRDBMSにも種類がある
+- BackendのAPIに合わせて適切なadapterを選ぶ
+- ただし共通の規格が少ない :cry:
+  - http://jsonapi.org/ :+1:
+  - 独自RESTful API :sweat_smile:
+  - http://graphql.org/ :question:
+
+---
+
+### JSON API (補足)
+
+- http://jsonapi.org/
+  - Ember DATA公式サポート
+  - RDBMSで管理されたデータをJSONで表せる設計されている
+  - Relationship (Railsでいうassociation)
+  - 後方互換維持指向
+
+---
+
+### Adapterの役割
+
+- URLのビルド
+- ajax
+
+```js
+this.store.findAll('post'); // => GET /posts
+this.store.find('post', 1); // => GET /posts/1
+post.save(); // PUT /posts/1
+post.destroyRecord(); // DELETE /post/1
+```
+
+---
+
+### Serializer
+
+- サーバから取得したJSONを
+- Storeが取扱えるJSONに変換する
+- ResponseBody => Serializer => JSONAPI format
+
+---
+
+### Deserializer
+
+- Store/Modelからサーバにリクエストする際に
+- サーバ側が取扱えるJSONに変換する
+- Model => Deserializer  => RequsetBody
+
+---
+
+### Adapter Serializer Deserializer
+
+- JSONAPI.ORG => DS.JSONAPIAdapter :+1::+1::+1:
+- Rails => [DS.RESTAdapter](http://emberjs.com/api/data/classes/DS.RESTAdapter.html) :question:
+- Other => Good luck :cat2:
+
+---
+
+### Initializer
+
+- initializer
+- instance-initializer
+
+---
+### initializer
+
+- アプリケーション起動時に実行される
+- injectの宣言を書いていく
+- 各コンポーネントがインスタンス化される前に設定を書く感じ
+
+```js
+app.inject('controller', 'service:session');
+```
+
+---
+
+### instance-initializer
+
+- アプリケーション起動後に実行される
+  - Routeなどがインスタンス化した後
+- lookupが使える
+- lookupして何か設定する時はこっち
+
+```js
+// インスタンスとは
+Presentation = DS.Model.extend(...);
+instance = new Presentation();
+^^^^^^^^
+instance.set('status', "そろそろ終わります");
+```
+
+---
+
+### instance-initializer
+
+- RouteやControllerはアプリケーション起動時にインスタンス化されます
+- クラスの設定ではなくインスタンスの設定になるので、instance-initializerで設定します
+
+```js
+import ENV from 'app/config/environment';
+
+export function initialize(application) {
+  let pusherService = application.lookup('service:pusher');
+  pusherService.setup(ENV.PUSHER_KEY, ENV.PUSHER_CONNECTION);
+}
+
+export default {
+  name: 'pusher-service',
+  initialize: initialize
+};
+```
+
+---
+
+### Addon
+
+- Less is more ⏰
+- https://emberobserver.com/
+- https://www.emberaddons.com/
+
+```
+ember install ember-bootstrap
+ember install ember-cli-active-link-wrapper
+```
+
+---
+
+### etc...
+
+# :scream:
+
+Maybe next time? :wink:
+
+---
+
+### モデルのソートはどこですべきか？
+
+- ember-composable-helpers
+
+```hbs
+{{#each (sort-by "lastName" "firstName" users) as |user|}}
+  {{user.lastName}}, {{user.firstName}}
+{{/each}}
+```
+
+---
+
+### モデルのフィルターはどこですべきか？
+
+- 見た目の問題であれば ember-composable-helper
+- Ajaxが絡むならRoute
+
+---
 
 # Thank you :pray:
 
