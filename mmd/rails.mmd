@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant Browser
+  participant Rails
+  participant DB
+Browser->>+Rails: GET /repositories/:name
+Note over Rails: repositories/show
+Rails->>DB: Find Repository
+Rails->>DB: Find Commits
+Rails->>-Browser: Whole HTML

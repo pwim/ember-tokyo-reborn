@@ -7,7 +7,12 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('hello-world');
+  this.route('repositories', function() {
+    this.route('repository', { path: '/:name' }, function() {
+      this.route('contributors');
+      this.route('edit');
+    });
+  });
 });
 
 export default Router;

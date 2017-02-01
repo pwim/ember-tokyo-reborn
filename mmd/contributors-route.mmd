@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant User
+  participant Ember/Browser
+  participant API
+Note over User, API: Org is fixed with emberjs, all repositories are emberjs org's
+User->>+Ember/Browser: /repositories/ember.js/contributors
+Note over Ember/Browser: ApplicationRoute
+Note over Ember/Browser: RepositoriesRoute
+Ember/Browser->>API: GET /orgs/emberjs/repos
+Note over Ember/Browser: RepositoriesRepositoryRoute
+Ember/Browser->>API: GET /repos/emberjs/emberj.js
+Note over Ember/Browser: RepositoriesRepositoryContributorsRoute
+Ember/Browser->>API: GET /repos/emberjs/ember.js/contributors
+Ember/Browser->>-User: Display

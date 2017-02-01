@@ -1,0 +1,12 @@
+<h1 class="page-header">{{link-to model.name 'repositories.repository' model.name}}</h1>
+<ul class="list-inline">
+{{#active-link}}
+  {{link-to 'Collaborator' 'repositories.repository.contributors' model.name class="btn btn-default"}}
+{{/active-link}}
+{{#active-link}}
+  {{link-to 'Edit' 'repositories.repository.edit' model.name class="btn
+  btn-default"}}
+{{/active-link}}
+</ul>
+
+{{outlet}}
