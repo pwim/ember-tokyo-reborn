@@ -2,6 +2,10 @@
 
 The Second Step (Router, Route and etc)
 
+>https://github.com/dopin/ember-tokyo-reborn/
+
+>https://github.com/dopin/ember-tokyo-reborn/blob/master/presentation.md
+
 
 ---
 
@@ -52,7 +56,7 @@ The Second Step (Router, Route and etc)
 
 - Murasaki-san / dopin / whatever
 - New Organizer :flushed: Help me!
-- Freelance
+- Freelance / Ember.js Rails developer
 - I :heart_eyes: :sake: :wine_glass: and :yen:, :dog2: :cat2: but :no_good: :smoking:
 - I wanna be a good guy in Splatoon always. =>
 
@@ -61,11 +65,11 @@ The Second Step (Router, Route and etc)
 ### Ember.js Tokyo
 
 - :tada: Reborn!!
-- Next March 23rd 2017 at Sakura internet
+- Next March 22nd 2017 at Sakura internet
 - Next Next late in May 2017 at Sakra internet
 - We're looking for companies which provide us venue. :eyes: :bow:
-- https://ember-japan-community-slackin.herokuapp.com/
 - Stay tuned
+- https://ember-japan-community-slackin.herokuapp.com/
 
 ---
 
