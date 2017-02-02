@@ -36,7 +36,7 @@ The Second Step (Router, Route and etc)
 - Convention of model hook
 - ajaxはどこでやるべきか
 - その他のComponentを雑に説明
-  - Ember.Objext Misin Service
+  - Ember.Object Mixin Service
   - Store Model Adapter Serializer Deserializer
   - Addon etc...
 
